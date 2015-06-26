@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html >
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<div ng-app="myApp" ng-init="someProperty='some data'">
+    <div ng-init="siblingProperty='moreData'">
+        Inside Div Two:{{aThirdProperty}}
+        <div ng-init="aThirdProperty='data for 3rd property'" data-ng-controller="SomeController">
+            Inside Div Three:{{aThirdProperty}}
+            <div>in controller:{{someValue}}</div>
+            <div data-ng-controller="SecondController">
+                Inside Div Four:{{aThirdProperty}}
+                <br/>
+                Outside myDirective:{{myProperty}}
+                <div my-directive ng-init="myProperty='wow,this is cool'">
+                    Inside myDirective:{{myProperty}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.controller("SomeController",function($scope){
+        $scope.someValue='some value from SomeController';
+    }).controller("SecondController",function($scope){})
+    .directive("myDirective",function(){
+                return{
+                    priority:100,
+                    restrict:'A',
+//                    scope:{}
+                    scope:true
+                }
+            });
+
+</script>
+</html>

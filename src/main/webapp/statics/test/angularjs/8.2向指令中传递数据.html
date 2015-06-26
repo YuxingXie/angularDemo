@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+    <div><input ng-model="name"></div>
+    <div id="1">
+        <div my-directive my-url="http://baidu.com" my-link-text="click me to go to {{name}}"></div>
+    </div>
+    <div id="2">
+        <div my-directive my-url="http://baidu.com" my-link-text="click me to go to baidu"></div>
+    </div>
+    <div id="3">
+        <div my-directive my-url="http://google.com" my-link-text="click me to go to google"></div>
+    </div>
+
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.directive('myDirective', function () {
+        return {
+            restrict: 'A',
+            replace: true,
+            template: '<a href="{{myUrl}}">{{myLinkText}}</a>',
+//            controller: function ($scope) {
+//                //指令可以有它自己的控制器,在那种情况下，我们可以将
+//                //$scope.someProperty设置成"someProperty with @ binding"
+//                $scope.myUrl="myUrl with @ binding";
+//            }
+            scope:{
+                myUrl:'@',//绑定策略
+                myLinkText:'@'
+            }
+        }
+    });
+
+</script>
+</html>

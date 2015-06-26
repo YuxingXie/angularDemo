@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<div data-ng-controller="ServiceController">
+    <label>username</label>
+    <input type="text" name="username" ng-model="username" placeholder="enter a github user name"/>
+    <ul>
+        <li data-ng-repeat="event in events">
+            <!--{{event|json}}-->
+            {{event.actor.login}},{{event.repo.name}}
+        </li>
+    </ul>
+</div>
+
+
+</body>
+<script type="text/javascript">
+    var myService=angular.module('myApp.services',[]);
+    myService.factory('githubService',['$http',function($http){//$http也是服务，被注入,这里采用显示的行内注释
+        var githubUrl='https://api.github.com';
+        var runUserRequest=function(username,path){
+            return $http({
+                method:'JSONP',
+                url:githubUrl+'/users/'+username+'/'+path+'?callback=JSON_CALLBACK'
+            });
+
+        };
+        return {
+            events:function(username){
+                return runUserRequest(username,'events');
+            }
+        };
+    }]);
+    var myApp = angular.module("myApp", ['myApp.services']);
+    myApp.controller('ServiceController',function($scope,$timeout,githubService){
+        var timeout;
+        $scope.$watch('username',function(newUsername){
+            if(newUsername){
+                if(timeout) $timeout.cancel(timeout);
+                timeout=$timeout(function(){
+                    githubService.events(newUsername)
+                    .success(function(data,status,headers){
+//                        $scope.events=data.data;//大概访问太频繁了，github只返回两条空数据，自己造一条吧
+                        $scope.events=[{actor:{login:'aa1'},repo:{name:'repo1'}},
+                            {actor:{login:'aa2'},repo:{name:'repo2'}},
+                            {actor:{login:'aa3'},repo:{name:'repo3'}}]
+                    });
+                },350);
+            }
+
+        })
+    });
+</script>
+</html>

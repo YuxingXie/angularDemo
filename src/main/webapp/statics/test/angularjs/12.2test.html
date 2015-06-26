@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+    <script src="../../plugins/angular-1.2.19/angular-route.js"></script>
+
+</head>
+<body>
+<header><h1>header</h1></header>
+<div class="content">
+    <a onclick="javascript:alert($location.path())" href="#">aa</a>
+    <div data-ng-view></div>
+
+</div>
+<footer><h5>footer</h5></footer>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", ['ngRoute']);
+    myApp.config(['$routeProvider', function ($routeProvider) {
+        //在这里定义路由
+        $routeProvider
+                .when("/", {templateUrl: 'views/home.html', controller: 'HomeController'})
+                .when("/login", {templateUrl: 'views/login.html', controller: 'LoginController'})
+                .when("/inbox/:name", {templateUrl: 'views/inbox.html', controller: 'InboxController'})
+                .when("/dashboard", {
+                    templateUrl: 'views/dashboard.html',
+                    controller: 'DashboardController'
+//            ,resolve:{user:function(SessionService){return SessionService.getCurrentUser()}}
+                })
+                .otherwise({redirectTo: '/'});
+    }])
+            .controller("HomeController", function ($scope) {})
+            .controller("LoginController", function ($scope,$location, $log) {
+                $log.info($location.search());
+//                 $location.path("/inbox/xx");
+            })
+            .controller("DashboardController", function ($scope) {})
+            .controller("InboxController", function ($scope, $routeParams, $log) {
+                $log.info($routeParams.name)
+            })
+    ;
+</script>
+
+</html>

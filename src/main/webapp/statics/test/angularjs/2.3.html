@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body  ng-app="">
+<script src="../../plugins/angular-1.2.19/angular.js"></script>
+<div ng-controller="MyController"><h5>hello {{clock.now}}</h5></div>
+<div ng-controller="MyController"><h5>hello {{clock.color}}</h5></div>
+</body>
+<script type="text/javascript">//偷懒了，应该把这个放到一个js文件中再引入这个js
+    function MyController($scope){
+        $scope.clock={now:new Date(),color:"red"};
+        var updateClock=function(){
+            $scope.clock.now=new Date();
+//            $scope.clock.color="red";
+        };
+        setInterval(function(){$scope.$apply(updateClock)},1000);
+    };
+</script>
+</html>

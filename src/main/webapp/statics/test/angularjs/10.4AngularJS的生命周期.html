@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<h2>此节内容可能比较难懂，需要认真研究</h2>
+
+<p>AngularJS启动之前，文本编辑器中保存HTML文档。</p>
+
+<p>所以先把编写的HTML当做一个普通文本对待吧。</p>
+
+<p>启动应用后，会进行编译和链接，作用域会同HTML进行绑定，应用可以对用户在HTML中进行的操作进行实时响应。
+    启动应用后应该是指HTML加载到浏览器中吧？我的理解是，HTML是一种解释型语言，在所有的DOM加载完以后，通过调用angular.js中的函数执行一些方法，把DOM中包含指令(内置，自定义)的DOM重新构造一遍。如果熟悉bootStrap插件，它也是通过类似的方法实现一些功能的。</p>
+
+<h3>编译阶段</h3>
+
+<p>这是第一个阶段。实际上应该是解析DOM。</p>
+<p>每一个指令的模板中都可能含有另外一个指令，另外一个指令也可能会有自己的模板。</p>
+<p>要理解这句话，最好是举一个例子：</p>
+<textarea cols="80" rows="8" data-ng-disabled="true">
+    myApp.directive("oneDirective", function () {
+        return {
+            restrict: 'A',
+            replace: true,
+            template: '<twoDirective></twoDirective> '
+        }
+    })
+</textarea>
+<p>上面的代码中oneDirective指令的模板包含了另一个指令twoDirective。另外一个例子是在指令模板中使用ng-transclude也是一个模板中使用指令的例子。
+    用面向对象的观点看，这是一种类之间的耦合，使得类依赖其它类才能运行，并不是合理的。</p>
+<p>AngularJS调用HTML文档根部的指令时，会遍历其中所有的模板，模板中也可能包含带有模板的指令。</p>
+<p>所以，如书上所说，模板树可能又大又深。</p>
+<p>模板树：因为模板都是附着在指令内部或代替指令元素。模板和指令构成了一个新的DOM树。这个是可以理解的，
+    如果一个页面上有多个相同的指令的话，就会生成多个相同或相似的DOM，我称之为模板实例，这些不同的指令生成的DOM按理应该都加入模板树了。</p>
+<p>只有属于最高优先级指令的模板会被解析并添加到模板树中。</p>
+<p>编译后的模板返回一个叫模板函数的函数。先创建DOM再绑定数据。</p>
+<p>绑定数据，我们可以总结一下是怎样的情形。一种绑定法是从输入控件的ng-model或ng-init指令中获得值插入带插值符号的地方或者其它指令中。
+    另外一种绑定法是在controller中的$scope中定义数据，再在页面上显示。</p>
+<p>对指令和其中的子模板进行遍历或编译，编译后的模板返回模板函数。那么编译后AngularJS处于一种什么样的状态呢？这个时候，所有的DOM都应该
+可以准备生成了，但实际上还没有生成，因为编译后返回的模板函数还可以对DOM树进行修改。</p>
+<p>这个时候DOM树还没有进行数据绑定，所以一些指令比如ng-repeat,ng-transclude生成DOM树的时候开销较小。
+    由于ng-repeat循环的次数和数据有关，既然数据还没绑定，那么可想而知，DOM树中只包含了一个待循环的DOM。</p>
+<p>模板函数长什么见10.1.4。模板函数被传递给编译后的DOM树中的每个指令定义规则中指定的连接函数。</p>
+<h3>compile(对象或函数)</h3>
+<p>compile函数不是必须的，没有它DOM树也一样也被编译出来。但是有了它，我们可以对指令中的DOM进行操作。见书中的示例。</p>
+<p>之后AngularJS做的工作就是链接，即创建DOM并绑定数据。负责链接的是链接函数。</p>
+<p>compile和link是互斥的，compile覆盖link。</p>
+<h3>链接</h3>
+<p>如果前面的内容清楚了，这里可以简单点介绍。</p>
+<p>scope:用来注册监听器的作用域</p>
+<p>其它iElement,iAttr,controller都是链接函数的参数。controller中ngModelController是一个特殊的controller。ng-model本来也是一个指令，
+它的控制器就叫ngModelController。特殊的地方见书本内容。</p>
+<p>剩余的内容看书基本可懂，不再描述。</p>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.directive("sidebox", function () {
+        return {
+            restrict: 'A',
+            scope: {
+                title: '@'
+            },
+            transclude: true,//把指令标签内的内容嵌入进来，嵌入的内容放到了包含ng-transclude指令的元素内
+            replace: true,
+            template: '<div class="sidebox">\
+            <div class="content">\
+            <h2 class="header">{{title}}</h2>\
+            <span class="content" ng-transclude></span>\
+            </div>\
+            </div>'
+        }
+    }).directive("myDirective", function () {
+        return {
+            restrict: 'A',
+            transclude: true,
+            scope: {
+                linkText: '='
+            },
+            controller: function ($scope, $log, $element, $transclude) {
+                $transclude(function (clone) {
+                    var a = angular.element("<a>");
+                    a.attr("href", clone.text());
+//                    a.text($scope.linkText);//为何不能生效？
+                    a.text(clone.text());
+                    $log.info("created new a tag in link directive");
+                    $element.append(a);
+                });
+            }
+        }
+    });
+</script>
+</html>

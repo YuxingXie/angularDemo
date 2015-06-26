@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+do request users:
+<div data-ng-controller="ServiceController">
+    <ul>
+        <li data-ng-repeat="user in users">
+            {{user.id}},{{user.name}}
+        </li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript">
+    var myService=angular.module('myApp.services',[]);
+    myService.factory('githubService',function($http){
+        var runUsersRequest=function(){
+            var promise=
+             $http({
+                method:'JSONP',
+                url:'http://localhost:8088/mall/api/users'
+            });
+        return promise;
+        };
+        return {
+            users:function(){
+                return runUsersRequest();
+            }
+        };
+    });
+    var myApp = angular.module("myApp", ['myApp.services']);
+    myApp.controller('ServiceController',function($scope,githubService){
+                    alert("nl")
+                    githubService.users()
+                    .success(function(data,status,headers){
+                        $scope.users=data.data;
+
+                    });
+
+    });
+</script>
+</html>

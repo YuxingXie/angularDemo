@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<div data-ng-controller="SomeController">
+    {{someBareValue}}
+    <button data-ng-click="someAction()">Communicate to child</button>
+    <div data-ng-controller="ChildController">
+        {{someBareValue}}
+        <button data-ng-click="childAction()">Communicate to parent</button>
+
+    </div>
+</div>
+
+<h3>ng-form</h3>
+
+<form name="signup_form"
+      data-ng-controller="FormController" ng-submit="submitForm()" novalidate>
+    <div data-ng-repeat="field in fields" ng-form="signup_form_input">
+        <input type="text" name="dynamic_input" ng-required="field.isRequired" ng-model="field.name"
+               placeholder="{{field.placeholder}}"/>
+        <div data-ng-show="signup_form_input.dynamic_input.$dirty && signup_form_input.dynamic_input.$invalid">
+            <span class="error" data-ng-show="signup_form_input.dynamic_input.$error.required">
+                The field is required.
+            </span>
+        </div>
+    </div>
+    <button type="submit" data-ng-disabled="signup_form.$invalid">Submit All</button>
+</form>
+<style>
+    input.ng-invalid{border:1px solid red;}
+    input.ng-valid{border:1px solid green;}
+</style>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.controller("SomeController", function ($scope) {
+        $scope.someBareValue = 'hello computer';
+        $scope.someAction = function () {
+            $scope.someBareValue = "hello human,from parent";
+        }
+    }).controller("ChildController", function ($scope) {
+        $scope.childAction = function () {
+            $scope.someBareValue = "hello human,from child";
+        }
+    })
+            .controller("FormController", function ($scope) {
+                $scope.fields = [//硬编码先
+                    {placeholder: 'Username', isRequired: true},
+                    {placeholder: 'Password', isRequired: true},
+                    {placeholder: 'Email(optional)', isRequired: false}
+                ];
+                $scope.submitForm = function () {
+                    alert("it works!");
+                }
+            });
+
+</script>
+</html>

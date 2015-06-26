@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .content > ul > li {
+            color: #008000;
+            list-style: circle;
+        }
+
+        .header {
+            color: red;
+        }
+
+        .sidebox {
+            border: 1px solid;
+        }
+    </style>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<ul>
+    <li style="list-style: lower-alpha">@绑定</li>
+    <li style="list-style: lower-alpha">=绑定</li>
+    <li style="list-style: lower-alpha">&绑定</li>
+</ul>
+a,b见<a href="8.2来理解一下双向数据绑定.html">8.2</a>
+
+<h3>&绑定</h3>
+&绑定传递一个引用，比如一个函数，当包含指令的DOM中属性值是一个函数的时候用此绑定法
+<h3>transclude:指令函数参数</h3>
+
+<p>transclude属性指定为true时，可以将指令内的内容嵌入指令标签指定的位置，这个位置由template中包含ng-transclude的元素决定.</p>
+
+<div sidebox title="Links">
+    <ul>
+        <li>First link</li>
+        <li>Second link</li>
+    </ul>
+</div>
+
+<h3>controller(字符串或函数)：指定指令的控制器</h3>
+<p>注：在控制器内部操作DOM是和AngularJS风格相悖的做法</p>
+<div ng-init="linkText='sina'" my-directive link_text="linkText">http://sina.com</div>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.directive("sidebox", function () {
+        return {
+            restrict: 'A',
+            scope: {
+                title: '@'
+            },
+            transclude: true,//把指令标签内的内容嵌入进来，嵌入的内容放到了包含ng-transclude指令的元素内
+            replace: true,
+            template: '<div class="sidebox">\
+            <div class="content">\
+            <h2 class="header">{{title}}</h2>\
+            <span class="content" ng-transclude></span>\
+            </div>\
+            </div>'
+        }
+    }).directive("myDirective",function(){
+        return{
+            restrict:'A',
+            transclude:true,
+            scope:{
+                linkText:'='
+            },
+            controller:function($scope,$log,$element,$transclude){
+                $transclude(function (clone){
+                    var a=angular.element("<a>");
+                    a.attr("href",clone.text());
+//                    a.text($scope.linkText);//为何不能生效？
+                    a.text(clone.text());
+                    $log.info("created new a tag in link directive");
+                    $element.append(a);
+                });
+            }
+        }
+    });
+</script>
+</html>

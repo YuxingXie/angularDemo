@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body  ng-app="">
+<script src="../../plugins/angular-1.2.19/angular.js"></script>
+<div ng-controller="MyController"><h5>hello {{clock}}</h5></div>
+<div id="xx">sfb</div>
+<script type="text/javascript">
+    function MyController($scope,$timeout){
+        var updateClock=function(){
+            $scope.clock=new Date();
+            $timeout(function(){//$timeout应该是一个Angular.js的定时器函数吧
+                updateClock();
+            },1000);
+        };
+        updateClock();
+    };
+</script>
+</body>
+</html>

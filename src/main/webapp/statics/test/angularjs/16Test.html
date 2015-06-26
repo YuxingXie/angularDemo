@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+    <script src="../../plugins/angular-1.2.19/angular-route.js"></script>
+    <script src="../../plugins/angular-1.2.19/angular-cookies.js"></script>
+    <script src="../../plugins/angular-1.2.19/restangular.js"></script>
+    <script src="../../plugins/angular-1.2.19/lodash.js"></script>
+</head>
+<body>
+<h3>使用AngularJS进行身份验证</h3>
+
+<div data-ng-view>
+    <!--<div data-ng-controller="MainController">-->
+        <!--<a href="#" data-ng-click="toLogin()">login</a>-->
+    <!--</div>-->
+</div>
+</body>
+<script>
+    angular.module('myApp.services', ['ngCookies']) .constant('ACCESS_LEVELS', {pub: 1, user: 2})
+            .factory('Auth',function($cookieStore,ACCESS_LEVELS){
+                var _user=$cookieStore.get('user');
+                var setUser=function(user){
+//                    if(!user){
+//                        user={role:-1,access_level:ACCESS_LEVELS.pub}
+//                    }
+                    if(!user.role||user.role<0){
+                        user.role=ACCESS_LEVELS.pub;
+                    }
+                    _user=user;
+                    $cookieStore.put('user',_user);
+                };
+                return{
+                    isAuthorized:function(lvl){
+                        return _user.role>=lvl;
+                    },
+                    setUser:setUser,
+                    isLoggedIn:function(){
+                        return _user?true:false;
+                    },
+                    getUser:function(){return _user;},
+                    getId:function(){return _user?_user.token:''},
+                    logout:function(){
+                        $cookieStore.remove('user');
+                        _user=null;
+                    }
+                }
+            });
+    angular.module('myApp', ['ngRoute','myApp.services','restangular'])
+            .config(function (RestangularProvider) {
+                RestangularProvider.setBaseUrl('/mall/api');
+                RestangularProvider.setErrorInterceptor(function(resp){
+                    console.log('error request');
+                    return false;
+                })
+            })
+            .factory('navigation',function($location,Restangular){
+                return{
+                    toLogin:function(){
+                        var newUser = {name: 'Mariah Carey', sex: "f"};
+                        var postUser = Restangular.all('/user/login');
+                        postUser.post(newUser).then(function(rtUser){//rtUser是服务器返回的对象
+                            console.log("return user\'s id:"+rtUser.id.time);
+                        });
+                    }
+                }
+            })
+            .config(function ($routeProvider, ACCESS_LEVELS) {
+                $routeProvider
+                        .when('/', {
+                            controller: 'MainController',
+                            templateUrl: 'views/main.html',
+                            data:{access_level: ACCESS_LEVELS.pub}
+                        })
+                        .when('/account', {
+                            controller: 'AccountController',
+                            templateUrl: 'views/account.html',
+                            data:{access_level: ACCESS_LEVELS.user}
+                        })
+                        .when('/login', {
+                            controller: 'AccountController',
+                            templateUrl: '/mall/api/user/login',
+                            data:{access_level: ACCESS_LEVELS.pub}
+                        })
+                        .otherwise({
+//                            controller: 'MainController',
+//                            templateUrl: 'views/main.html',
+//                            access_level: ACCESS_LEVELS.pub,
+                            redirectTo: '/'
+                        })
+            })
+            .config(function ($httpProvider, ACCESS_LEVELS) {
+                var interceptor = function ($q, $rootScope, Auth) {
+                    return {
+                        'response': function (resp) {
+                            if (resp.config.url == '/api/login') {
+                                Auth.setToken(resp.data.token)
+                            }
+                            return resp;
+                        },
+                        'responseError': function (rejection) {
+                            switch (rejection.status) {
+                                case 401:
+                                    if (rejection.config.url !== 'api/login') {
+                                        $rootScope.$broadcast('auth:loginRequired');
+                                    }
+                                    break;
+                                case 403:
+                                    $rootScope.$broadcast('auth:forbidden');
+                                    break;
+                                case 404:
+                                    $rootScope.$broadcast('page:notFound');
+                                    break;
+                                case 500:
+                                    $rootScope.$broadcast('server:error');
+                                    break;
+                            }
+                            return $q.reject(rejection);
+                        }
+                    };
+                };
+                $httpProvider.interceptors.push(interceptor);
+            })
+            .run(['$rootScope','$log','$location','Auth','ACCESS_LEVELS',function($rootScope,$log,$location,Auth,ACCESS_LEVELS){
+                var user={role:-1,access_level:ACCESS_LEVELS.pub};
+                if(!$rootScope.user){
+                    $log.info('rootScope user is empty')
+                    $rootScope.user=user;
+                    Auth.setUser(user);
+                }
+                $rootScope.$on('$routeChangeStart',function(evt,next,curr){
+//                $rootScope.$on('$routeChangeSuccess',function(evt,next,curr){
+
+
+                    console.log(Auth.getUser().role);
+//                    var role=next.data.access_level;
+                    if(!Auth.isAuthorized(Auth.getUser().role)){
+                        if(Auth.isLoggedIn()){
+                            $location.path('/');
+                        }else{
+                            $location.path('/login');
+                        }
+                    }
+                });
+            }])
+            .controller('MainController',function($scope,navigation){
+                $scope.toLogin=function(){navigation.toLogin()};
+            })
+            .controller('AccountController',function($scope){});
+
+</script>
+</html>

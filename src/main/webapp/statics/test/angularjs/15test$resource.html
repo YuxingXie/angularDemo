@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+    <script src="../../plugins/angular-1.2.19/angular-resource.js"></script>
+</head>
+<body>
+do request users by $resource service:
+<div data-ng-controller="ServiceController">
+    <ul>
+        <li data-ng-repeat="user in users">
+            {{user.name}}
+        </li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript">
+    var myService=angular.module('myApp.services',[]);
+    var myApp = angular.module("myApp", ['ngResource']);
+    myApp.controller('ServiceController',['$scope', '$resource',function($scope,$resource){
+        var users=$resource('http://localhost:8088/mall/api/users')
+       users.query(function(users){
+           console.log("first user:"+users[0].name);
+           $scope.users=users;
+       });
+    }]);
+</script>
+</html>

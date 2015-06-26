@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+
+<div>
+    <my-directive></my-directive>
+</div>
+
+<h3>自定义指令</h3>
+<my-directive></my-directive>
+<h3>表达式</h3>
+<p>we can access :{{rootProperty}}</p>
+<div data-ng-controller="ParentController">
+    <p>we can access :{{rootProperty}} and {{parentProperty}}</p>
+    <div data-ng-controller="ChildController">
+        <p>we can access {{rootProperty}} and {{parentProperty}} and {{childProperty}}</p>
+        <p>{{fullSentenceFromChild}}</p>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.directive('myDirective', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: '<a href ="http://www.google.com">click me to google</a>'
+        }
+    });
+    myApp.run(function($rootScope){
+        //使用.run访问$rootScope
+        $rootScope.rootProperty="root scope";
+    })
+    .controller('ParentController',function($scope){
+        //使用.controller访问ng-controller内部的属性
+        //在DOM忽略的$scope中，根据当前控制器进行推断
+        $scope.parentProperty='parent scope';
+    })
+    .controller("ChildController",function($scope){
+        $scope.childProperty='child scope';
+        //同在DOM中一样，我们可以通过当前$scope直接访问原型中的任意属性
+        $scope.fullSentenceFromChild="Same $scope:Wen can access "+
+        $scope.rootProperty+' and '+
+        $scope.parentProperty+' and '+
+        $scope.childProperty
+    });
+</script>
+</html>

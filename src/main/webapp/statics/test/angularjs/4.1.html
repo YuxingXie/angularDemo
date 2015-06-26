@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body  ng-app="myApp">
+
+<div ><h5>hello {{name}}</h5></div>
+</body>
+<script type="text/javascript">
+    angular.module("myApp",[]).run(function($rootScope){
+        $rootScope.name="World";
+    });
+</script>
+</html>

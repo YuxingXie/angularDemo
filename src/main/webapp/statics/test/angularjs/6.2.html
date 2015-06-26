@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body  ng-app="myApp">
+
+<div data-ng-controller="MyController">
+    <!--do not work!!!!-->
+    <!--<input ng-model="to" type="email" placeholder="Recipient"/>-->
+    <!--<textarea ng-model="emailBody"></textarea>-->
+
+    <div id="emailEditor">
+        <input ng-model="to" type="email" placeholder="Recipient"/>
+        <textarea ng-model="emailBody"></textarea>
+    </div>
+    <div id="emailPreview"><pre>__previewText__</pre></div>
+</div>
+<script type="text/javascript">
+    //    angular.module("myApp",[]).controller('MyController',function($scope,$interpolate){
+    //       $scope.$watch('emailBody',function(body){
+    //          if(body){
+    //              var template=$interpolate(body);
+    //              $scope.previewText=template({to:$scope.to});
+    //          }
+    //       })
+    //    });
+
+    //创建一个服务emailParser
+    anjular.module("emailParser",[]).config(['interpolateProvider',function($interpolateProvider){
+        $interpolateProvider.startSymbol("__");
+        $interpolateProvider.endSymbol("__");
+    }]).factory('EmailParser',['$interpolate',function($interpolate){
+        //处理解析的服务
+        return {
+            parse:function(text,context){
+                var template=$interpolate(text);
+                return template(context);
+            }
+        };
+    }]);
+    angular.module("myApp",['emailParser']).controller("MyController",['$scope','EmailParser',function($scope,EmailParser){
+        //设置监听
+        $scope.$watch('emailBody',function(body){
+            if(body){
+                $scope.previewText=EmailParser.parse(body,{to:$scope.to});
+            }
+        });
+    }])
+</script>
+</body>
+
+</html>

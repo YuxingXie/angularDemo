@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+
+<div data-ng-controller="SomeController">
+    Outside myDirective:{{myProperty}}
+    <div my-directive ng-init="myProperty='wow,this is cool'">
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.controller("SomeController", function ($scope) {
+    }).directive("myDirective", function () {
+                return {
+                    priority: 100,
+                    restrict: 'A',
+                    scope:{},//这种形式或scope:true表示隔离作用域
+                    template:'<div>  Inside myDirective:{{myProperty}}</div>'
+                }
+            });
+
+</script>
+</html>

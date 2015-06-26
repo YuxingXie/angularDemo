@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<h3>其实form和a使用了指令</h3>
+<h3>基础ng属性指令</h3>
+<h4>布尔属性</h4>
+<h5>ng-disabled</h5>
+<input type="button" value="button" data-ng-disabled="true">
+<input type="text" value="text" data-ng-disabled="true">
+<input type="radio" value="radio" data-ng-disabled="true">
+<input type="checkbox" value="checkbox" data-ng-disabled="true">
+<select data-ng-disabled="true"><option>option</option></select>
+<textarea data-ng-disabled="true">text area</textarea>
+<hr/>
+<input type="text" placeholder="输入文字按钮可用" ng-model="someProperty">
+<input type="button" value="button" data-ng-disabled="!someProperty">
+<hr/>
+其它还有ng-readonly,ng-checked,ng-selected，不一一举例
+<h4>类布尔属性</h4>
+ng-href,ng-src
+<a data-ng-href="{{url}}"> I'm feeling luck,when I load</a>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+//    myApp.controller("MyController",function($scope){
+//        $scope.url='http://sina.com';
+//    })
+    myApp.run(function($rootScope,$timeout){
+        $timeout(function(){
+            $rootScope.url='http://baidu.com';
+        },2000);
+    });
+
+</script>
+</html>

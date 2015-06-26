@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<label>Their URL field:</label><input type="text" ng-model="theirUrl"/>
+<div my-directive some-attr="theirUrl" my-link-text="click me to baidu"></div>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.directive('myDirective', function () {
+        return {
+            restrict: 'A',
+            replace: true,
+            template: '<div><label>My URL field:</label><input type="text" ng-model="myUrl"/>' +
+            '<a href="{{myUrl}}">{{myLinkText}}</a></div>',
+            scope: {
+                myUrl: '=someAttr',//经过了修改哦
+                myLinkText: '@'
+            }
+        }
+    });
+
+</script>
+</html>

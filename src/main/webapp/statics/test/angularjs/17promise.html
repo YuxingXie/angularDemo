@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<h3>Open Pull Request for Angular JS</h3>
+<ul data-ng-controller="DashboardController">
+    <li data-ng-repeat="pr in pullRequests">{{pr.title}}</li>
+</ul>
+<h3> a test for example</h3>
+<ul data-ng-controller="TestController">
+    <li data-ng-repeat="user in users">{{user.name}}</li>
+</ul>
+</body>
+<script>
+    angular.module('myApp', [])
+            .factory('TestService', function ($q, $http) {
+                var getEvents = function (repo) {
+                    ret = $http.get('/mall/api/' + repo);
+                    return ret;
+                };
+                var service = {
+                    makeMultipleRequest: function (repos) {
+                        var d = $q.defer(), percentComplete = 0, output = [], currData;
+                        for (var i = 0; i < repos.length; i++) {
+                            percentComplete = (i + 1) / repos.length * 100;
+                            var ret = getEvents(repos[i]);
+                            output.push(ret);
+//                            console.log(percentComplete)
+                            d.notify('' + percentComplete);
+                        }
+                        d.resolve(output);
+                        return d.promise;
+                    }
+                };
+                return service;
+            })
+            .controller('TestController', function ($scope, TestService) {
+                TestService.makeMultipleRequest(['user/test1', 'user/test2', 'user/test3'])
+                        .then(function (result) {
+                            console.log('success function')
+                            console.log(result);
+                            var users=[];
+                            for (var i = 0; i < result.length; i++) {
+                                result[i].success(function (data) {//它本身也是由$http.get方法返回的promise对象，具体说是个httpPromise对象，success方法是httpPromise对象的方法
+                                    users.push(data);
+//                                    console.log(data);
+                                });
+                            }
+                            $scope.users = users;
+
+                        }
+//                        , function (err) {
+//                            console.log('error function')
+//                        }, function (percentComplete) {
+//                            console.log('notify function');
+//                            $scope.progress = percentComplete;
+//                        }).finally(function(){
+//                            console.log('finally end');
+//                        }
+                )
+            })
+            .controller('DashboardController', [
+                '$scope', 'GithubService',
+                function ($scope, GithubService) {
+                    GithubService.getPullRequests()
+                            .then(function (data) {
+                                $scope.pullRequests = data;
+                            })
+                }])
+
+            .factory('GithubService', [
+                '$q', '$http',
+                function ($q, $http) {
+                    var getPullRequests = function () {
+                        var deferred = $q.defer();
+                        // Get list of open angular js pull requests from github
+                        $http.get('https://api.github.com/repos/angular/angular.js/pulls')
+                                .success(function (data) {
+                                    deferred.resolve(data);
+                                })
+                                .error(function (reason) {
+                                    deferred.reject(reason);
+                                })
+                        return deferred.promise;
+                    }
+
+                    return {
+                        getPullRequests: getPullRequests
+                    };
+                }]);
+</script>
+</html>

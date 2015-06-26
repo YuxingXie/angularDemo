@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+</head>
+<body>
+<div data-ng-controller="MyController">
+    <button data-ng-click="sayHello()">say hello</button>
+</div>
+
+<div data-ng-controller="SomeController">
+    <button data-ng-click="sayHello()">say hello</button>
+</div>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", []);
+    myApp.factory('myGreeter', function () {
+        return {
+            greet: function (msg) {
+                alert(msg);
+            }
+        }
+    })
+    .factory('greeter', function () {
+        return {
+            greet: function (msg) {
+                alert(msg);
+            }
+        }
+    }).controller('MyController', function ($scope, myGreeter) {
+        $scope.sayHello = function () {
+            myGreeter.greet("hello")
+        };
+    })
+    //    var aControllerFactory=function aController($scope,greeter){
+    //        console.log("LOADED controller",greeter);
+    //
+    //
+    //    }
+    //    aControllerFactory.$inject=['$scope','greeter'];
+    //    console.log('greeter service')
+    //    var greeterService=function(){
+    //        return{
+    //            greet:function(msg){alert(msg);}
+    //        }
+    //    }
+    //    myApp.controller('AnotherController',aControllerFactory).factory('greeter',greeterService)
+    //    var injector=angular.injector(['ng','myApp']);
+    //    controller=injector.get('$rootScope')
+    //    newScope=rootScope.$new()
+    //    controller('AnotherController',{$scope:newScope})
+    //    var scope=injector.get('$rootScope').$new();
+    //    var MyController=$controller('MyController',{$scope:scope});
+    myApp.controller('SomeController', ['$scope', 'greeter', function ($scope, agreeter) {//这里不要和factory中的方法参数同名了
+        $scope.sayHello = function () {
+            agreeter.greet("aloha");
+
+        };
+//        var injector=angular.injector(['ng','myApp']);
+//        injector.annotate(function($q,agreeter){
+//            console.log($q.toString());
+//        })
+    }]);
+
+</script>
+</html>
