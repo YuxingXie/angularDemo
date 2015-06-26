@@ -30,7 +30,7 @@ do request users by Restangular service:
     var app = angular.module('myApp', ['restangular']);
     // Using RestangularProvider we can configure properties. To check all properties go to https://github.com/mgonto/restangular
     app.config(function (RestangularProvider) {
-        RestangularProvider.setBaseUrl('/mall/api');
+        RestangularProvider.setBaseUrl('/angular_demo/api');
         RestangularProvider.setErrorInterceptor(function(resp){
             console.log('error request');
             return false;

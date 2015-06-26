@@ -19,7 +19,7 @@
     angular.module('myApp', [])
             .factory('TestService', function ($q, $http) {
                 var getEvents = function (repo) {
-                    ret = $http.get('/mall/api/' + repo);
+                    ret = $http.get('/angular_demo/api/' + repo);
                     return ret;
                 };
                 var service = {

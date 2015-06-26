@@ -50,7 +50,7 @@
             });
     angular.module('myApp', ['ngRoute','myApp.services','restangular'])
             .config(function (RestangularProvider) {
-                RestangularProvider.setBaseUrl('/mall/api');
+                RestangularProvider.setBaseUrl('/angular_demo/api');
                 RestangularProvider.setErrorInterceptor(function(resp){
                     console.log('error request');
                     return false;
@@ -81,7 +81,7 @@
                         })
                         .when('/login', {
                             controller: 'AccountController',
-                            templateUrl: '/mall/api/user/login',
+                            templateUrl: '/angular_demo/api/user/login',
                             data:{access_level: ACCESS_LEVELS.pub}
                         })
                         .otherwise({
