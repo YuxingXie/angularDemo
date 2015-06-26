@@ -5,14 +5,13 @@
     <title>test</title>
     <script src="../../plugins/angular-1.2.19/angular.js"></script>
     <script src="../../plugins/angular-1.2.19/angular-route.js"></script>
-
 </head>
 <body>
 <header><h1>header</h1></header>
+<h3>在地址栏后面加上/login再访问试试</h3>
 <div class="content">
     <a onclick="javascript:alert($location.path())" href="#">aa</a>
     <div data-ng-view></div>
-
 </div>
 <footer><h5>footer</h5></footer>
 </body>
@@ -42,5 +41,4 @@
             })
     ;
 </script>
-
 </html>
