@@ -33,8 +33,7 @@
     <li><a href="statics/test/angularjs/15test.Restangular.html">15 Restangular</a></li>
     <li><a href="statics/test/angularjs/16Test.html">16 XHR实践</a></li>
     <li><a href="statics/test/angularjs/17promise.html">17 promise</a></li>
-
-
+    <li><a href="statics/test/angularjs/17promise.html">18 otherss</a></li>
 
 
 </ul>
