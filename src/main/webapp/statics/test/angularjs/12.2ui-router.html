@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html data-ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script src="../../plugins/angular-1.2.19/angular.js"></script>
+    <script src="../../plugins/angular-1.2.19/angular-ui-router.js"></script>
+    <script src="../../plugins/jquery-1.11.3.min.js"></script>
+</head>
+<body data-ng-app="myApp">
+<h1>AngularJS Home Page (Ui-router Demonstration)</h1>
+
+<div data-ui-view=""></div>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module("myApp", ['ui.router']);
+
+    myApp.config(function ($stateProvider, $urlRouterProvider) {
+
+        $urlRouterProvider.when("", "/PageTab");
+
+        $stateProvider
+                .state("PageTab", {
+                    url: "/PageTab",
+                    templateUrl: "views/PageTab.html"
+                })
+                .state("PageTab.Page1", {
+                    url:"/Page1",
+                    templateUrl: "views/Page1.html"
+                })
+                .state("PageTab.Page2", {
+                    url:"/Page2",
+                    templateUrl: "views/Page2.html"
+                })
+                .state("PageTab.Page3", {
+                    url:"/Page3",
+                    templateUrl: "views/Page3.html"
+                });
+    });
+    $(document).ready(function(){
+        $(document).on('click',"#btn_a",function(){
+            console.log("drop me down");
+            alert("drop me down!!!");
+
+        });
+    });
+</script>
+</html>

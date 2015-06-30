@@ -2,9 +2,20 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>home</title>
+    <script src="../../../plugins/jquery-1.11.3.min.js"></script>
 </head>
 <body>
 <h1>HOME PAGE</h1>
+<button id="btn_a">click me</button>
 </body>
+<script>
+    $(document).ready(function(){
+        $("#btn_a").click(function(){
+            console.log("drop me down");
+            alert("drop me down");
+
+        });
+    });
+</script>
 </html>

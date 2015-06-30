@@ -5,12 +5,13 @@
     <title>test</title>
     <script src="../../plugins/angular-1.2.19/angular.js"></script>
     <script src="../../plugins/angular-1.2.19/angular-route.js"></script>
+
 </head>
 <body>
 <header><h1>header</h1></header>
 <h3>在地址栏后面加上/login再访问试试</h3>
 <div class="content">
-    <a onclick="javascript:alert($location.path())" href="#">aa</a>
+    <a data-ng-controller="HomeController" data-ng-click="login()" href="#">login</a>
     <div data-ng-view></div>
 </div>
 <footer><h5>footer</h5></footer>
@@ -30,9 +31,20 @@
                 })
                 .otherwise({redirectTo: '/'});
     }])
-            .controller("HomeController", function ($scope) {})
+            .run(['$rootScope','$location','$route',function($rootScope,$location,$route){
+                $rootScope.$on('$routeChangeSuccess',function(evt,next,previous){
+                    console.log('route change success')
+//                    $route.reload();
+                });
+            }])
+            .controller("HomeController", function ($scope,$location) {
+                $scope.login=function(){
+                    alert("to login")
+                    $location.path("/login");
+                }
+            })
             .controller("LoginController", function ($scope,$location, $log) {
-                $log.info($location.search());
+//                $log.info($location.search());
 //                 $location.path("/inbox/xx");
             })
             .controller("DashboardController", function ($scope) {})

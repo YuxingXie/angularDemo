@@ -28,6 +28,7 @@
     <li><a href="statics/test/angularjs/10.3.html">10.3 绑定策略</a></li>
     <li><a href="statics/test/angularjs/10.4.html">10.4 AngularJS的生命周期</a></li>
     <li><a href="statics/test/angularjs/12.2test.html">12.2 布局模板</a></li>
+    <li><a href="statics/test/angularjs/12.2ui-router.html">12.2 ui-router.js</a></li>
     <li><a href="statics/test/angularjs/13.html">13 依赖注入</a></li>
     <li><a href="statics/test/angularjs/14.html">14 使用服务</a></li>
     <li><a href="statics/test/angularjs/15test.html">15 同外界通信：XHR和服务器通信</a></li>
