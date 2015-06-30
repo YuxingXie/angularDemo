@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="path" value="<%=request.getContextPath() %>"/>
 <c:if test="${path eq '/'}"><c:set var="path" value=""/></c:if>
@@ -8,9 +8,7 @@
 <body>
 <h1>angularJS DEMO</h1>
 <ul>
-    <li>
-        <a href="statics/test/angularjs/helloworld.html">helloworld</a>
-    </li>
+    <li><a href="statics/test/angularjs/helloworld.html">helloworld</a></li>
     <li><a href="statics/test/angularjs/2.2simple_data_binding.html">2.2 数据绑定</a></li>
     <li><a href="statics/test/angularjs/2.3.html">2.3 最佳实践</a></li>
     <li><a href="statics/test/angularjs/3.html">3 模块</a></li>
@@ -36,8 +34,7 @@
     <li><a href="statics/test/angularjs/15test.Restangular.html">15 Restangular</a></li>
     <li><a href="statics/test/angularjs/16Test.html">16 XHR实践</a></li>
     <li><a href="statics/test/angularjs/17promise.html">17 promise</a></li>
-
-
+    <li><a href="statics/test/angularjs/17promise.html">18 otherss</a></li>
 
 
 </ul>
