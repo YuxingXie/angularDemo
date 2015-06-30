@@ -6,22 +6,27 @@
     <script src="../../plugins/angular-1.2.19/angular.js"></script>
 </head>
 <body  ng-app="myApp">
-
+<h2>这个例子不同于第一章hello world的例子</h2>
 <div data-ng-controller="MyController">
     <input ng-model="expr" type="text" placeholder="Enter an expression"/>
     <h2>{{parsedValue}}</h2>
 </div>
 </body>
 <script type="text/javascript">
+//    var n=1;
     angular.module("myApp",[]).controller('MyController',function($scope,$parse){
+       // 如果不$watch，试图中的值不会绑定
        $scope.$watch('expr',function(newVal,oldVal,scope){
            if(newVal!==oldVal){
                //用该表达式设置parseFun
                var parseFun=$parse('expr');
                //获取经过解析后的表达式的值
                $scope.parsedValue=parseFun(scope);
+//               n++;
+//               $scope.parsedValue=n;
            }
        })
+
     });
 </script>
 </html>

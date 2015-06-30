@@ -31,6 +31,9 @@
                 })
                 .otherwise({redirectTo: '/'});
     }])
+//            .config(['$locationProvider',function($locationProvider){
+//                $locationProvider.html5Mode(true)
+//            }])
             .run(['$rootScope','$location','$route',function($rootScope,$location,$route){
                 $rootScope.$on('$routeChangeSuccess',function(evt,next,previous){
                     console.log('route change success')

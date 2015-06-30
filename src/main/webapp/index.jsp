@@ -11,9 +11,9 @@
     <li><a href="statics/test/angularjs/helloworld.html">helloworld</a></li>
     <li><a href="statics/test/angularjs/2.2simple_data_binding.html">2.2 数据绑定</a></li>
     <li><a href="statics/test/angularjs/2.3.html">2.3 最佳实践</a></li>
-    <li><a href="statics/test/angularjs/3.html">3 模块</a></li>
+    <li><a href="statics/test/angularjs/3.html">3 模块($apply)</a></li>
     <li><a href="statics/test/angularjs/4.1.html">4.1 视图和$scope的世界</a></li>
-    <li><a href="statics/test/angularjs/6.1.html">6.1解析AnjularJS表达式</a></li>
+    <li><a href="statics/test/angularjs/6.1.html">6.1解析AnjularJS表达式($watch)</a></li>
     <li><a href="statics/test/angularjs/6.2.html">6.2插值字符串</a></li>
     <li><a href="statics/test/angularjs/8.1.html">8.1指令：自定义HTML元素和属性</a></li>
     <li><a href="statics/test/angularjs/8.2.html">8.1指令：自定义HTML元素和属性</a></li>
